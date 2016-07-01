@@ -7,14 +7,18 @@ rm(list=ls())
 
 library(plyr)
 
-source('weightFun.R')
-source('weightedDistribution.R')
-source('getStartValue.R')
-source('summaryFun.R')
-
-userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/weightedDistance/'
+userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
+userPath <- '~/project/likelihoodAC/'
 dataPath <- paste0(userPath,'data/')
 outPath <- paste0(userPath,'output/')
+codePath <- paste0(userPath,'code/')
+
+
+
+source(paste0(codePath,'weightFun.R'))
+source(paste0(codePath,'weightedDistribution.R'))
+source(paste0(codePath,'getStartValue.R'))
+source(paste0(codePath,'summaryFun.R'))
 
 
 load(paste0(dataPath,'llogSmall.Rdata'))
@@ -48,43 +52,4 @@ system.time(
     catch <- llply(llogListSmall[1:2],estWD,weightFun=weightFun,subdivisions=10000)
 )
 
-
-extractDist(catch,criteria='aic')
-
-getAC(catch,weightFun)
-
-
-
-catch[1]
-weightedDistribution('weibull',dat$distance,weightFun=weightFun,subdivisions=1000)
-
-distribution <- 'weibull';fatDist <- dat$distance
-
-
-
-
-source('weightedDistribution.R')
-simWD <- function(fatDist,w,...){
-    allDist <- c('rayleigh','gamma','weibull','llog','norm','gompertz')
-    out <- ldply(allDist,weightedDistribution,fatDist=fatDist,weightFun=w,...)
-    ##print(out)
-    out$n <- length(fatDist)
-    return(out)
-}
-
-
-system.time(
-    WDResult <- llply(weibullList,simWD,w=weightFun,subdivisions=1000)
-)
-
-
-save(WDResult,file=paste0(outPath,'weightedDistFromWeibullData.Rdata'))
-
-
-simWD(weibullList[[1]],weightFun,subdivisions=1000)
-
-weightedDistribution('gompertz',fatDist=weibullList[[1]],weightFun=weightFun,subdivisions=1000)
-
-
-weightedDistribution('norm',fatDist=fatDist,weightFun=w,subdivisions=1000)
 
