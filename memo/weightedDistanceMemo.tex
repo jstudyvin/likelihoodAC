@@ -1,0 +1,149 @@
+\documentclass{westarticle}
+\input{C:/Users/jstudyvin/GoogleDrive/latex/header}
+\usepackage{setspace}
+\usepackage{enumitem}
+\title{Modeling Fatality Distances}
+\author{Paul Rabie, Daniel Riser-Espinoza, Jared Studyvin}
+\begin{document}
+\westtitle
+\doublespace
+A probability density function (pdf) of fatalities found around turbines is
+needed to calculate an area correction factor. The pdf is a function
+of the distance of the carcass from the turbine, assuming isotropy.
+
+If all of the carcasses are assumed to be detected with equal
+probability the carcass distances can be modeled in a typical
+fashion and standard maximum likelihood estimates can be obtained. In
+practice the probability of detection is not equal for all carcasses
+and in particular the probability of detection is a function of the
+distance from the turbine mast.
+
+This document presents some of the ideas to account for differing
+probabilities of detection and some of the questions and difficulties
+associated with this process. The first section describes the weighted
+distribution, as introduced by Dan Dalthorp, with the two versions
+depending on the choice of weights  and the second section introduces the weighted
+likelihood. This paper does not solve the problem but is a foundation
+for further discussion to answer the remaining questions.
+
+\section{Weighted Distribution}
+
+Let $f(x|\theta)$ be some known pdf (e.q. Gamma, Weibull, etc.) with
+$\theta$ being the associated vector of parameters. In the context of
+carcass fatalities at wind turbines $x$ represents distances from the
+turbine.
+
+The weighted distribution (WD) is defined as
+\begin{align}
+  \label{eq:fstar}
+f_j^*(x|\theta) = \frac{w_j(x)f(x|\theta)}{\int_{I_f} w_j(y)f(y|\theta)dy}
+\end{align}
+where $I_f$ is the support associated with $f(x|\theta)$ and
+$w_j(x)$ is the weighting function.
+
+
+\begin{enumerate}[label=\bf{Q\arabic*:}]
+\item \bf{How should $w_j(x)$ be defined?}
+\end{enumerate}
+
+
+We believe that $w_j(x)$ should be 
+\begin{align}
+  \label{eq:w}
+  w_1(x) \propto \mbox{ probability of detection at distance x}
+\end{align}
+or
+\begin{align}
+  \label{eq:inversew}
+  w_2(x) \propto \frac{1}{\mbox{ probability of detection at distance x}}
+\end{align}
+%Our initial testing gives more credence to $w(x)$ according to
+%Equation \ref{eq:w}.
+It should be noted that $w_j(x)$ is a function of
+distance and if two carcasses are the same distance from the turbine
+the weight is the same for both carcasses.
+
+
+In either case of the choice of $w_j(x)$, an estimate of $\theta$ is
+obtained from maximizing the log likelihood of $f_j^*(x|\theta)$,
+\begin{align}
+  \label{eq:Lstar}
+l_j^*(\theta | \underbar{x})= \sum_{i=1}^{n}log(w_j(x_i)) +
+  \sum_{i=1}^{n}log(f(x_i|\theta)) - nlog(\int_{I_f} w_j(y)f(y|\theta)dy)
+\end{align}
+where $x_i$ is the distance from the turbine for the $i^{th}$
+($i=1,2,\cdots,n$) carcass. The result from maximizing
+$l_j^*(\theta|\underbar{x})$ (Eq. \ref{eq:Lstar}) produces $\hat\theta_j^*$.
+
+
+Once the choice of $w_j(x)$ has been made and $\hat\theta_j^*$ obtained,
+the question becomes how to apply $\hat\theta_j^*$ to calculate the area
+correction. The estimate $\hat\theta_j^*$ can be applied to $f$, $f^*_j$
+or
+\begin{align}
+  \label{eq:fdagger}
+f_j^{\dagger}(x|\theta) = \frac{f(x|\theta)}{\int_{I_f} w_j(y)f(y|\theta)dy}
+\end{align}
+
+
+\begin{enumerate}[label=\bf{Q\arabic*:},resume]
+  
+\item \bf{$\hat\theta_j^*$ can be used to calculate the densities of
+    $f_j^*$, $f$ or $f_j^{\dagger}$. Which of the three are meaninful
+    in describing either the observed dat or the true underlying
+    distribution fo carcasses using the weighting function $w_1(x)$?
+    Or using $w_2(x)$?}
+% \item \bf{Does $\hat\theta_j$ correspond to $f_j^*(x|\theta)$,
+%     $f(x|\theta)$ or $f_j^{\dagger}(x|\theta)$?}
+% \item \bf{Should $f_j^*(x|\theta)$, $f(x|\theta)$ or
+%     $f_j^{\dagger}(x|\theta)$ be used
+%     to calculate the area correction?}
+% \item Between the three functions: $f^*(x|\theta)$, $f(x|\theta)$, and
+%   $f_j^{\dagger}(x|\theta)$, which corresponds to the observed data
+%   and which corresponds to the approximation of the ``truth''?
+\end{enumerate}
+
+\section{Weighted Likelihood}
+
+The weighted likelihood (WL) applies the weights to the likelihood and not
+the distribution itself. Assuming some distribution $f(x|\theta)$ that
+models the distances of carcasses from a turbine, which has
+corresponding likelihood $L(\theta|x_i)$.
+The weighted likelihood is
+\begin{align}
+  \label{eq:wlike}
+  WL(\theta|\underbar{x}) = \prod_{i=1}^{n}L(\theta|x_i)^{w_i}
+\end{align}
+where $w_i$ is the weight associated with the $i^{th}$ carcass. Please
+note, $w_i$ is not a function but simply a weight value. 
+We believe the choice for the weights ($w_i$) should be proportional
+to the inverse of the probability of detection. 
+This changes the likelihood to a pseudo
+increase in sample size. For example if the probability of detection
+is one half at distance $x_i$, then $w_i=2$, which is analogous to finding two carcasses
+at distance $x_i$.
+
+\begin{enumerate}[label=\bf{Q\arabic*:},resume]
+\item \bf{Does the WL allow weights to be unique to each carcass?}
+  % Using the WL allows the weights to be unique to every
+% carcasses, i.e. two carcasses with the same distance from turbine can
+% have different weights based on plot type, for example.
+
+\item \bf{Is the assumption of the WL, that the observed data does not follow
+$f(x|\theta)$ but the estimate $\hat\theta$ from Equation
+\ref{eq:wlike} does correspond to $f(x|\theta)$?}
+% The idea is the
+% weights allow $\hat\theta$ to be recovered because unequal probability of
+% detection is accounted for by the weights.
+
+\end{enumerate}
+
+\section{Next Step?}
+
+We see three possible choices: the WD with the weights being the inverse probability of
+detection (Eq. \ref{eq:inversew}), the WD with the weights being the non-inverse of
+probability of detection (Eq. \ref{eq:w}), and the
+WL with the weights being the inverse of probability of detection (Eq. \ref{eq:wlike}). The main question is
+what should be done next?
+
+\end{document}
