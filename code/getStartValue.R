@@ -7,7 +7,11 @@
 
 getStartValue <- function(x,distribution,w){
 
-    require(SDMTools) ## for weighted variance and mean
+    havePack <- require(SDMTools) ## for weighted variance and mean
+
+    if(!havePack){
+        install.packages('SDMTools')
+    }
 
     distn <- tolower(distribution)
     allowedDist <- c('rayleigh','gamma','weibull','llog','norm','gompertz')

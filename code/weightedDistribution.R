@@ -9,9 +9,14 @@ weightedDistribution <- function(distribution,fatDist,weightFun,...){
 
 
 
-    require(VGAM)
-    require(FAdist)
-
+    havevgam <- require(VGAM)
+    if(!havevgam){
+        install.packages('VGAM')
+    }
+    havefadist <- require(FAdist)
+    if(!havefadist){
+        install.packages('FAdist')
+    }
 
     distn <- tolower(distribution)
     allowedDist <- c('rayleigh','gamma','weibull','llog','norm','gompertz')
