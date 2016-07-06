@@ -1,0 +1,76 @@
+##########################################################
+## Jared Studyvin
+## 5 July 2016
+## estimated the weighted likelihood on the simulated data
+##########################################################
+
+library(plyr)
+
+userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
+dataPath <- paste0(userPath,'data/')
+codePath <- paste0(userPath,'code/')
+outPath <- paste0(userPath,'output/')
+
+source(paste0(codePath,'weightFun.R'))
+source(paste0(codePath,'weightedLikelihood.R'))
+source(paste0(codePath,'getStartValue.R'))
+
+
+
+simListWL <- function(dat,weightFun,...){
+
+    require(plyr)
+
+    new <- adply(dat,1,function(row,w,...){
+              area <- w(row$distance,type=as.character(row$plotType[1]),...)
+              data.frame(row,area)
+          },w=weightFun)
+
+
+    fatW <- with(new,1/(piHat*area)) ## invert the weights
+    fatDist <- new$distance
+
+
+    ##allDist <- c('rayleigh','gamma','weibull','llog','norm','gompertz')
+    allDist <- c('gamma','weibull','llog','norm')
+    out <- ldply(allDist,weightedLikelihood,fatDist=fatDist,fatW=fatW)
+        ##print(out)
+    out$n <- length(fatDist)
+
+
+    return(out)
+
+
+}# end simListWL
+
+
+
+library(parallel)
+library('doSNOW')
+detectCores(all.tests = TRUE, logical = TRUE)
+
+
+
+
+#######################################################################
+## gamma distribution
+#######################################################################
+## small
+
+load(paste0(dataPath,'gammaSmall.Rdata'))
+
+
+
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    gammaSmallResult <- llply(gammaListSmall,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+
+
+
+
+

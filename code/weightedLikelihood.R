@@ -8,9 +8,16 @@
 weightedLikelihood <- function(fatDist,fatW,distribution,...){
 
 
-    require(VGAM)
-    require(FAdist)
-    ##require(truncdist)
+    havevgam <- require(VGAM)
+    if(!havevgam){
+        install.packages('VGAM')
+    }
+    havefadist <- require(FAdist)
+    if(!havefadist){
+        install.packages('FAdist')
+    }
+
+
 
     distn <- tolower(distribution)
     allowedDist <- c('rayleigh','gamma','weibull','llog','norm','gompertz')
