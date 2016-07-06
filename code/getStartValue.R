@@ -64,13 +64,20 @@ suppressWarnings(b <- nlminb(low,g,eulerConst=eulerConst,xbar=xbar,varx=varx,low
             out <- exp(lgamma(1+2/b)-2*lgamma(1+1/b)) - 1 - varx/xbar^2
             return(out)
             }
-        b <- uniroot(wei,interval=c(1e-1,maxx),varx=varx,xbar=xbar)$root
+
+        b <- tryCatch({
+            uniroot(wei,interval=c(1e-1,maxx),varx=varx,xbar=xbar)$root
+        },error=function(){
+            suppressWarnings(b <- nlminb(start=1e-1,objective=wei,varx=varx,xbar=xbar,lower=1e-5)$par)
+            return(b)
+            })
         a <- xbar/gamma(1+1/b)
         return(c(b,a))
     }
 
 
     ## This function gets the starting values for the distribution of interest.
+    ## the method of moments is a cheap way to get starting values for the likelihood
     out <- switch(distn,
                   rayleigh=c(wmean/sqrt(pi/2)), ## scale
                   gamma=c(wmean^2/wvar,mean(x)/var(x)), ## shape and rate
