@@ -67,7 +67,7 @@ suppressWarnings(b <- nlminb(low,g,eulerConst=eulerConst,xbar=xbar,varx=varx,low
 
         b <- tryCatch({
             uniroot(wei,interval=c(1e-1,maxx),varx=varx,xbar=xbar)$root
-        },error=function(cond){
+        },error=function(){
             suppressWarnings(b <- nlminb(start=1e-1,objective=wei,varx=varx,xbar=xbar,lower=1e-5)$par)
             return(b)
             })
