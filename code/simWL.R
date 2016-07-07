@@ -26,7 +26,7 @@ simListWL <- function(dat,weightFun,...){
               data.frame(row,area)
           },w=weightFun)
 
-
+    ## the weights need to have a multiplicative effect on the likelihood
     fatW <- with(new,1/(piHat*area)) ## invert the weights
     fatDist <- new$distance
 
@@ -69,7 +69,31 @@ system.time(
     )
 stopCluster(cl)
 
+save(gammaSmallResult,gammaParam,file=paste0(outPath,'gammaSmallWL.Rdata'))
 
+
+load(paste0(dataPath,'gammaMid.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    gammaMidResult <- llply(gammaListMid,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(gammaMidResult,gammaParam,file=paste0(outPath,'gammaMidWL.Rdata'))
+
+
+load(paste0(dataPath,'gammaBig.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    gammaBigResult <- llply(gammaListBig,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(gammaBigResult,gammaParam,file=paste0(outPath,'gammaBigWL.Rdata'))
 
 
 
