@@ -4,6 +4,8 @@
 ## estimated the weighted likelihood on the simulated data
 ##########################################################
 
+rm(list=ls())
+
 library(plyr)
 
 userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
@@ -44,9 +46,8 @@ simListWL <- function(dat,weightFun,...){
 }# end simListWL
 
 
-
-library(parallel)
 library('doSNOW')
+library(parallel)
 detectCores(all.tests = TRUE, logical = TRUE)
 
 
@@ -58,8 +59,6 @@ detectCores(all.tests = TRUE, logical = TRUE)
 ## small
 
 load(paste0(dataPath,'gammaSmall.Rdata'))
-
-
 
 cl <- makeCluster(4)
 registerDoSNOW(cl)
@@ -94,6 +93,130 @@ system.time(
 stopCluster(cl)
 
 save(gammaBigResult,gammaParam,file=paste0(outPath,'gammaBigWL.Rdata'))
+
+
+
+#######################################################################
+## weibull distribution
+#######################################################################
+## small
+load(paste0(dataPath,'weibullSmall.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    weibullSmallResult <- llply(weibullListSmall,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(weibullSmallResult,weibullParam,file=paste0(outPath,'weibullSmallWL.Rdata'))
+
+
+load(paste0(dataPath,'weibullMid.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    weibullMidResult <- llply(weibullListMid,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(weibullMidResult,weibullParam,file=paste0(outPath,'weibullMidWL.Rdata'))
+
+
+load(paste0(dataPath,'weibullBig.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    weibullBigResult <- llply(weibullListBig,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(weibullBigResult,weibullParam,file=paste0(outPath,'weibullBigWL.Rdata'))
+
+
+
+
+#######################################################################
+## llog distribution
+#######################################################################
+## small
+load(paste0(dataPath,'llogSmall.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    llogSmallResult <- llply(llogListSmall,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(llogSmallResult,llogParam,file=paste0(outPath,'llogSmallWL.Rdata'))
+
+
+load(paste0(dataPath,'llogMid.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    llogMidResult <- llply(llogListMid,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(llogMidResult,llogParam,file=paste0(outPath,'llogMidWL.Rdata'))
+
+
+load(paste0(dataPath,'llogBig.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    llogBigResult <- llply(llogListBig,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(llogBigResult,llogParam,file=paste0(outPath,'llogBigWL.Rdata'))
+
+
+
+#######################################################################
+## norm distribution
+#######################################################################
+## small
+load(paste0(dataPath,'normSmall.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    normSmallResult <- llply(normListSmall,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(normSmallResult,normParam,file=paste0(outPath,'normSmallWL.Rdata'))
+
+
+load(paste0(dataPath,'normMid.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    normMidResult <- llply(normListMid,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(normMidResult,normParam,file=paste0(outPath,'normMidWL.Rdata'))
+
+
+load(paste0(dataPath,'normBig.Rdata'))
+cl <- makeCluster(4)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    normBigResult <- llply(normListBig,simListWL,weightFun=weightFun,.parallel=TRUE,.paropts=list(.export=c('weightedLikelihood','getStartValue')))
+    )
+stopCluster(cl)
+
+save(normBigResult,normParam,file=paste0(outPath,'normBigWL.Rdata'))
 
 
 
