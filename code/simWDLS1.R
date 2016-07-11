@@ -147,3 +147,51 @@ system.time(
 stopCluster(cl)
 
 save(gammaBigResult,gammaParam,file=paste0(outPath,'gammaBigWD.Rdata'))
+
+
+
+#############################################################################
+## llog
+#############################################################################
+## small
+
+load(paste0(dataPath,'llogSmall.Rdata'))
+ls()
+
+cl <- makeCluster(5)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    llogSmallResult <- llply(llogListSmall,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+)
+stopCluster(cl)
+
+save(llogSmallResult,llogParam,file=paste0(outPath,'llogSmallWD.Rdata'))
+
+
+## mid
+load(paste0(dataPath,'llogMid.Rdata'))
+
+
+cl <- makeCluster(10)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    llogMidResult <- llply(llogListMid,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+)
+stopCluster(cl)
+
+save(llogMidResult,llogParam,file=paste0(outPath,'llogMidWD.Rdata'))
+
+## big
+load(paste0(dataPath,'llogBig.Rdata'))
+
+cl <- makeCluster(5)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    llogBigResult <- llply(llogListBig,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+)
+stopCluster(cl)
+
+save(llogBigResult,llogParam,file=paste0(outPath,'llogBigWD.Rdata'))
