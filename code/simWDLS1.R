@@ -173,7 +173,7 @@ save(llogSmallResult,llogParam,file=paste0(outPath,'llogSmallWD.Rdata'))
 load(paste0(dataPath,'llogMid.Rdata'))
 
 
-cl <- makeCluster(10)
+cl <- makeCluster(5)
 registerDoSNOW(cl)
 Sys.time()
 system.time(
