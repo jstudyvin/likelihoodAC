@@ -195,3 +195,50 @@ system.time(
 stopCluster(cl)
 
 save(llogBigResult,llogParam,file=paste0(outPath,'llogBigWD.Rdata'))
+
+
+#############################################################################
+## weibull
+#############################################################################
+## small
+
+load(paste0(dataPath,'weibullSmall.Rdata'))
+ls()
+
+cl <- makeCluster(5)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    weibullSmallResult <- llply(weibullListSmall,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+)
+stopCluster(cl)
+
+save(weibullSmallResult,weibullParam,file=paste0(outPath,'weibullSmallWD.Rdata'))
+
+
+## mid
+load(paste0(dataPath,'weibullMid.Rdata'))
+
+
+cl <- makeCluster(5)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    weibullMidResult <- llply(weibullListMid,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+)
+stopCluster(cl)
+
+save(weibullMidResult,weibullParam,file=paste0(outPath,'weibullMidWD.Rdata'))
+
+## big
+load(paste0(dataPath,'weibullBig.Rdata'))
+
+cl <- makeCluster(5)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    weibullBigResult <- llply(weibullListBig,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+)
+stopCluster(cl)
+
+save(weibullBigResult,weibullParam,file=paste0(outPath,'weibullBigWD.Rdata'))

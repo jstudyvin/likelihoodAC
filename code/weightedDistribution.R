@@ -69,6 +69,7 @@ weightedDistribution <- function(distribution,fatDist,weightFun,...){
         c <- tryCatch({
         integrate(toIntegrateFun,lower=lowLim,upper=upLim,parm=parm,w=w,distn=distn,...)$value
         },error=function(cond){
+            message(cond)
             message('Error with integration in the weighted distribution function.')
             message('The distribution is ',distn,', with parameter values: ',paste(parm,collapse=','))
             return(NA)
