@@ -7,8 +7,8 @@ rm(list=ls())
 
 library(plyr)
 
-##userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
-userPath <- 'D:/studyvin/likelihoodAC/'
+userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
+##userPath <- 'D:/studyvin/likelihoodAC/'
 dataPath <- paste0(userPath,'data/')
 outPath <- paste0(userPath,'output/')
 codePath <- paste0(userPath,'code/')
@@ -56,50 +56,50 @@ detectCores(all.tests = TRUE, logical = TRUE)
 
 
 #############################################################################
-## norm
+## llog
 #############################################################################
 ## small
 
-load(paste0(dataPath,'normSmall.Rdata'))
+load(paste0(dataPath,'llogSmall.Rdata'))
 ls()
 
 cl <- makeCluster(5)
 registerDoSNOW(cl)
 Sys.time()
 system.time(
-    normSmallResult <- llply(normListSmall,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+    llogSmallResult <- llply(llogListSmall,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
 )
 stopCluster(cl)
 
-save(normSmallResult,normParam,file=paste0(outPath,'normSmallWD.Rdata'))
+save(llogSmallResult,llogParam,file=paste0(outPath,'llogSmallWD.Rdata'))
 
 
 ## mid
-load(paste0(dataPath,'normMid.Rdata'))
+load(paste0(dataPath,'llogMid.Rdata'))
 
 
 cl <- makeCluster(5)
 registerDoSNOW(cl)
 Sys.time()
 system.time(
-    normMidResult <- llply(normListMid,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+    llogMidResult <- llply(llogListMid,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
 )
 stopCluster(cl)
 
-save(normMidResult,normParam,file=paste0(outPath,'normMidWD.Rdata'))
+save(llogMidResult,llogParam,file=paste0(outPath,'llogMidWD.Rdata'))
 
 ## big
-load(paste0(dataPath,'normBig.Rdata'))
+load(paste0(dataPath,'llogBig.Rdata'))
 
 cl <- makeCluster(5)
 registerDoSNOW(cl)
 Sys.time()
 system.time(
-    normBigResult <- llply(normListBig,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+    llogBigResult <- llply(llogListBig,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
 )
 stopCluster(cl)
 
-save(normBigResult,normParam,file=paste0(outPath,'normBigWD.Rdata'))
+save(llogBigResult,llogParam,file=paste0(outPath,'llogBigWD.Rdata'))
 
 
 #############################################################################
