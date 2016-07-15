@@ -1,14 +1,14 @@
 ##########################################################
 ## Jared Studyvin
-## 9 June 2016
+## 15 July 2016
 ## Test the weighted distribution
 ##########################################################
 rm(list=ls())
 
 library(plyr)
 
-userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
-##userPath <- 'D:/studyvin/likelihoodAC/'
+##userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
+userPath <- 'D:/studyvin/likelihoodAC/'
 dataPath <- paste0(userPath,'data/')
 outPath <- paste0(userPath,'output/')
 codePath <- paste0(userPath,'code/')
