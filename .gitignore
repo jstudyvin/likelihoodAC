@@ -46,6 +46,11 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+<<<<<<< HEAD
 #### Jared's addition
 .Rhistory
 *.Rhistory
+=======
+# Jared's additions
+.Rhistory
+>>>>>>> master
