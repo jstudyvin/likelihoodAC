@@ -233,7 +233,7 @@ save(weibullMidResult,weibullParam,file=paste0(outPath,'weibullMidWD.Rdata'))
 ## big
 load(paste0(dataPath,'weibullBig.Rdata'))
 
-cl <- makeCluster(5)
+cl <- makeCluster(7)
 registerDoSNOW(cl)
 Sys.time()
 system.time(
