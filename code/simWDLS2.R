@@ -54,7 +54,6 @@ library('doSNOW')
 detectCores(all.tests = TRUE, logical = TRUE)
 
 
-
 #############################################################################
 ## llog
 #############################################################################
@@ -63,7 +62,7 @@ detectCores(all.tests = TRUE, logical = TRUE)
 load(paste0(dataPath,'llogSmall.Rdata'))
 ls()
 
-cl <- makeCluster(5)
+cl <- makeCluster(7)
 registerDoSNOW(cl)
 Sys.time()
 system.time(
