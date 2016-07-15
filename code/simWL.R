@@ -46,8 +46,14 @@ simListWL <- function(dat,weightFun,...){
 }# end simListWL
 
 
+<<<<<<< HEAD
 library('doSNOW')
 library(parallel)
+=======
+
+library(parallel)
+library('doSNOW')
+>>>>>>> master
 detectCores(all.tests = TRUE, logical = TRUE)
 
 
@@ -60,6 +66,11 @@ detectCores(all.tests = TRUE, logical = TRUE)
 
 load(paste0(dataPath,'gammaSmall.Rdata'))
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> master
 cl <- makeCluster(4)
 registerDoSNOW(cl)
 Sys.time()
@@ -100,7 +111,14 @@ save(gammaBigResult,gammaParam,file=paste0(outPath,'gammaBigWL.Rdata'))
 ## weibull distribution
 #######################################################################
 ## small
+<<<<<<< HEAD
 load(paste0(dataPath,'weibullSmall.Rdata'))
+=======
+
+load(paste0(dataPath,'weibullSmall.Rdata'))
+
+
+>>>>>>> master
 cl <- makeCluster(4)
 registerDoSNOW(cl)
 Sys.time()
@@ -138,6 +156,7 @@ save(weibullBigResult,weibullParam,file=paste0(outPath,'weibullBigWL.Rdata'))
 
 
 
+<<<<<<< HEAD
 #######################################################################
 ## llog distribution
 #######################################################################
@@ -221,3 +240,5 @@ save(normBigResult,normParam,file=paste0(outPath,'normBigWL.Rdata'))
 
 
 
+=======
+>>>>>>> master

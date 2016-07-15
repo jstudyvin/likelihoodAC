@@ -9,9 +9,14 @@ weightedDistribution <- function(distribution,fatDist,weightFun,...){
 
 
 
-    require(VGAM)
-    require(FAdist)
-
+    havevgam <- require(VGAM)
+    if(!havevgam){
+        install.packages('VGAM')
+    }
+    havefadist <- require(FAdist)
+    if(!havefadist){
+        install.packages('FAdist')
+    }
 
     distn <- tolower(distribution)
     allowedDist <- c('rayleigh','gamma','weibull','llog','norm','gompertz')
@@ -30,6 +35,7 @@ weightedDistribution <- function(distribution,fatDist,weightFun,...){
 
 
     toIntegrateFun <- function(x,parm,w,distn,...){
+
         ## This function is the weight function times the pdf
         ## This function is integrated in the likelihood for the constant
         out <- switch(distn,
@@ -53,6 +59,7 @@ weightedDistribution <- function(distribution,fatDist,weightFun,...){
 
     loglik <- function(parm,x,distn,w,...){
 
+
         ## for debugging
         ##print(parm)
 
@@ -64,6 +71,7 @@ weightedDistribution <- function(distribution,fatDist,weightFun,...){
         c <- tryCatch({
         integrate(toIntegrateFun,lower=lowLim,upper=upLim,parm=parm,w=w,distn=distn,...)$value
         },error=function(cond){
+            message(cond)
             message('Error with integration in the weighted distribution function.')
             message('The distribution is ',distn,', with parameter values: ',paste(parm,collapse=','))
             return(NA)
@@ -91,8 +99,14 @@ weightedDistribution <- function(distribution,fatDist,weightFun,...){
 
     lowLim <- ifelse(distn=='norm',c(-Inf,1e-10),1e-10)
 
-    fit <- nlminb(start=startValue,objective=loglik,x=fatDist,distn=distn,w=weightFun,...,lower=lowLim)
-
+    fit <- tryCatch({
+        fit <- nlminb(start=startValue,objective=loglik,x=fatDist,distn=distn,w=weightFun,...,lower=lowLim)
+        fit
+    },error=function(cond){
+        message(cond)
+        fit <- list(objective=NA,par=NA,convergence=1,message='Error in loglik function')
+        return(fit)
+    })
     ## estimated values,make of length 2, if not already
     (fitParm <- c(fit$par,NA)[1:2])
 
@@ -100,8 +114,8 @@ weightedDistribution <- function(distribution,fatDist,weightFun,...){
     ## calculate the AIC value
     k <- length(startValue)
     n <- length(fatDist)
-    aic <- 2*(k+fit$objective) ## AIC value
-    aicc <- aic+2*k*(k+1)/(n-k-1) ## corrected AIC value
+    (aic <- 2*(k+fit$objective)) ## AIC value
+    (aicc <- aic+2*k*(k+1)/(n-k-1)) ## corrected AIC value
     ## I'm not sure this is the best way to compare between distributions
 
 

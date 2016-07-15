@@ -21,9 +21,6 @@ source(paste0(codePath,'getStartValue.R'))
 source(paste0(codePath,'summaryFun.R'))
 
 
-load(paste0(dataPath,'llogSmall.Rdata'))
-
-ls()
 
 ##listEl <- llogListSmall[[1]]
 ##dat <- subset(listEl,plotType=='RP'&piHat==.7)
@@ -48,8 +45,41 @@ estWD <- function(listEl,...){
 }
 
 
-system.time(
-    catch <- llply(llogListSmall[1:2],estWD,weightFun=weightFun,subdivisions=10000)
-)
 
+
+
+
+library(parallel)
+library('doSNOW')
+detectCores(all.tests = TRUE, logical = TRUE)
+
+
+
+#############################################################################
+## llog
+#############################################################################
+## small
+
+load(paste0(dataPath,'llogSmall.Rdata'))
+ls()
+
+cl <- makeCluster(6)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    llogSmallResult <- llply(llogListSmall,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+)
+stopCluster(cl)
+
+## mid
+load(paste0(dataPath,'llogMid.Rdata'))
+
+
+cl <- makeCluster(6)
+registerDoSNOW(cl)
+Sys.time()
+system.time(
+    llogMidResult <- llply(llogListMid,estWD,weightFun=weightFun,subdivisions=10000,.paropts=list(.export=c('getStartValue','weightedDistribution')),.parallel=TRUE)
+)
+stopCluster(cl)
 

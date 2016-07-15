@@ -11,7 +11,6 @@ weightFun <- function(x,type='RP',inverse=FALSE,...){
 
 
     require(dplyr)
-
     ## If plot == 'FULL' then return 1 if x is in the interval (0,100], otherwise return 0
     if(toupper(type)=='FULL'){
         out <- rep(1,length(x))
