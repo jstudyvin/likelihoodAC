@@ -25,23 +25,29 @@ extractDist <- function(resultList,distribution=NULL,...){
     extract <- function(el,distn=NULL,criteria='aicc'){
 
         if(!(criteria%in%names(el))){
-            warning('The criteria specified: ', criteria,' is available changing to aicc.')
+            warning('The criteria specified: ', criteria,' is unavailable changing to aicc.')
             criteria <- 'aicc'
         }
 
         if(is.null(distn)){
+            el <- subset(el,code==0)
             out <- eval(parse(text=paste0('subset(el,code==0&',criteria,'==min(',criteria,'))')))
         }else{
             out <- eval(parse(text=paste0("subset(el,distn=='",distn,"')")))
         }
+        if(nrow(out)==0){
+            nadf <- as.data.frame(matrix(NA,ncol=ncol(out)))
+            names(nadf) <- names(out)
+            out <- nadf
+        }
         return(out)
     } # end extract
 
-    elem <- resultList[[2]]
+    ##elem <- resultList[[473]]
 
     extractClass <- function(i,alist,...){
         elem <- alist[[i]]
-        if(is.list(elem)){
+        if(class(elem)=='list'){
             out <- ldply(elem,extract,...)
         }else{
             out <- extract(el=elem,...)
@@ -51,7 +57,13 @@ extractDist <- function(resultList,distribution=NULL,...){
     }# end extractClass
 
     out <- ldply(seq_along(resultList),extractClass,alist=resultList,distn=distn,...)
-    ##(out <- ldply(seq_along(resultList),extractClass,alist=resultList,distn='llog'))
+    ##out <- ldply(seq_along(resultList),extractClass,alist=resultList,distn=NULL)
+
+    ## for debugging
+    ## out <- NULL
+    ## for(i in seq_along(resultList)){
+    ##     out <- rbind(out,extractClass(i,resultList))
+    ## }
 
     return(out)
 } #end extractDist
@@ -60,6 +72,8 @@ extractDist <- function(resultList,distribution=NULL,...){
 
 
 CDF <- function(q,parm,distn){
+    library(VGAM)
+    library(FAdist)
     cdf <- switch(distn,
                   rayleigh=prayleigh(q=q,scale=parm[1]),
                   gamma=pgamma(q=q,shape=parm[1],rate=parm[2]),
@@ -74,15 +88,67 @@ CDF <- function(q,parm,distn){
 
 
 
-getAC <- function(resultList,wFun,bands=1:100,...){
+getAC <- function(resultList,wFun,bands=1:100,plotType=NULL,...){
+
+
+    if(is.null(plotType)){
+        stop('Add code for the weighed distribution results')
+    }
+
+    names(plotType) <- plotType
 
     dat <- extractDist(resultList=resultList,...)
 
-    out <- adply(dat,1,function(row,q){
+    w <- wFun(sort(bands))
+
+    out <- adply(dat,1,function(row,q,wF,pt,...){
                      q <- sort(q)
                      q <- c(head(q,1)-1,q)
                      par <- c(row$param1,row$param2)
-                     CDF(q=q,parm=par,distn=row$distn)
-                 },q=sort(bands))
+                     fatDen <- diff(CDF(q=q,parm=par,distn=as.character(row$distn)))
+                     ##
+                     ac <- laply(pt,function(x,wF,q,fatDen,...){
+                                     ## q was made 1 element longer for the diffence
+                                     ## This is why the first element needs removed
+                               sum(wF(q[-1],type=x,...)*fatDen)
+                           },wF=wF,fatDen=fatDen,q=q)
+                     for(i in 1:length(pt)){
+                         row[,paste0('areaCor',pt[i])] <- ac[i]
+                     }
+
+                     return(row)
+                 },q=sort(bands),wF=wFun,pt=plotType)
+
     return(out)
 } # end getAC
+
+
+getMHat <- function(resultList,wFun,datList=NULL,...){
+
+    acDat <- getAC(resultList=resultList,wFun=wFun,...)
+
+    ##acDat <- getAC(resultList=resultList,wFun=wFun,plotType=plotType)
+
+    getM <- function(acRow,datList){
+        library(tidyr)
+        library(dplyr)
+        if(is.null(datList)){
+            stop('add code for weighted distribution results')
+        }
+        dat <- datList[[acRow$rep]]
+        ## assumes plotType and piHat are column names
+        m <- ddply(dat,~plotType+piHat,summarize,mHat=sum(1/piHat))
+        vGather <- paste0(names(acRow)[grepl('areaCor',names(acRow))],collapse=',')
+        gatherAC <- eval(parse(text=paste0('gather(acRow,key=plotType,value=AC,',vGather,')')))[,c('plotType','AC')]
+        gatherAC$plotType <- gsub('areaCor','',gatherAC$plotType)
+
+        out <- suppressWarnings(full_join(m,gatherAC,by='plotType'))
+        out$nHat <- with(out,mHat/AC)
+
+        return(out)
+
+    }# end getM function
+
+    out <- adply(acDat,1,getM,datList=datList)
+    return(out)
+} # end getMHat function
