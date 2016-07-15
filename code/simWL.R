@@ -61,8 +61,6 @@ detectCores(all.tests = TRUE, logical = TRUE)
 
 load(paste0(dataPath,'gammaSmall.Rdata'))
 
-
-
 cl <- makeCluster(4)
 registerDoSNOW(cl)
 Sys.time()
