@@ -29,6 +29,13 @@ extractDist <- function(resultList,distribution=NULL,...){
             criteria <- 'aicc'
         }
 
+        ## Infinity aicc values happen when the sample is close to the number of parameters.
+        ## This isn't an issue for aic, so switch over if two or more value are infinity
+        if(sum(el[,criteria] == Inf)>1){
+            criteria <- 'aic'
+        }
+
+
         if(is.null(distn)){
             el <- subset(el,code==0)
             out <- eval(parse(text=paste0('subset(el,code==0&',criteria,'==min(',criteria,'))')))
@@ -43,7 +50,8 @@ extractDist <- function(resultList,distribution=NULL,...){
         return(out)
     } # end extract
 
-    ##elem <- resultList[[473]]
+    ## for debugging
+    ##elem <- resultList[[73]]
 
     extractClass <- function(i,alist,...){
         elem <- alist[[i]]
@@ -91,34 +99,51 @@ CDF <- function(q,parm,distn){
 getAC <- function(resultList,wFun,bands=1:100,plotType=NULL,...){
 
 
-    if(is.null(plotType)){
-        stop('Add code for the weighed distribution results')
-    }
-
-    names(plotType) <- plotType
 
     dat <- extractDist(resultList=resultList,...)
 
-    w <- wFun(sort(bands))
 
-    out <- adply(dat,1,function(row,q,wF,pt,...){
-                     q <- sort(q)
-                     q <- c(head(q,1)-1,q)
-                     par <- c(row$param1,row$param2)
-                     fatDen <- diff(CDF(q=q,parm=par,distn=as.character(row$distn)))
-                     ##
-                     ac <- laply(pt,function(x,wF,q,fatDen,...){
-                                     ## q was made 1 element longer for the diffence
-                                     ## This is why the first element needs removed
-                               sum(wF(q[-1],type=x,...)*fatDen)
-                           },wF=wF,fatDen=fatDen,q=q)
-                     for(i in 1:length(pt)){
-                         row[,paste0('areaCor',pt[i])] <- ac[i]
-                     }
+    if(is.null(plotType)){
+        out <- adply(dat,1,function(row,q,wF,...){
+                         if(is.na(row$distn)){
+                             row$AC <- NA
+                             return(row)
+                         }
+                         q <- sort(q)
+                         q <- c(head(q,1)-1,q)
+                         par <- c(row$param1,row$param2)
+                         fatDen <- diff(CDF(q=q,parm=par,distn=as.character(row$distn)))
+                         ##
+                         row$AC <- sum(wF(q[-1],type=row$plotType,...)*fatDen)
 
-                     return(row)
-                 },q=sort(bands),wF=wFun,pt=plotType)
+                         return(row)
+                     },q=sort(bands),wF=wFun)
 
+        out$nHat <- with(out,n/(piHat*AC))
+    }else{
+
+        names(plotType) <- plotType
+
+        w <- wFun(sort(bands))
+
+        out <- adply(dat,1,function(row,q,wF,pt,...){
+                         q <- sort(q)
+                         q <- c(head(q,1)-1,q)
+                         par <- c(row$param1,row$param2)
+                         fatDen <- diff(CDF(q=q,parm=par,distn=as.character(row$distn)))
+                         ##
+                         ac <- laply(pt,function(x,wF,q,fatDen,...){
+                                         ## q was made 1 element longer for the diffence
+                                         ## This is why the first element needs removed
+                                         sum(wF(q[-1],type=x,...)*fatDen)
+                                     },wF=wF,fatDen=fatDen,q=q)
+                         for(i in 1:length(pt)){
+                             row[,paste0('areaCor',pt[i])] <- ac[i]
+                         }
+
+                         return(row)
+                     },q=sort(bands),wF=wFun,pt=plotType)
+    } # end else
     return(out)
 } # end getAC
 
