@@ -21,6 +21,8 @@ extractDist <- function(resultList,distribution=NULL,...){
         }
     }# end else
 
+    ## for debugging
+    ##el <- elem[[2]]
 
     extract <- function(el,distn=NULL,criteria='aicc'){
 
@@ -31,10 +33,12 @@ extractDist <- function(resultList,distribution=NULL,...){
 
         ## Infinity aicc values happen when the sample is close to the number of parameters.
         ## This isn't an issue for aic, so switch over if two or more value are infinity
-        if(sum(el[,criteria] == Inf)>1){
+        if(sum(el[,criteria] == Inf,na.rm=TRUE)>1){
             criteria <- 'aic'
         }
 
+        ## negative aic values imply a bad optimization and should be removed
+        el <- subset(el,aic>0)
 
         if(is.null(distn)){
             el <- subset(el,code==0)
@@ -51,7 +55,7 @@ extractDist <- function(resultList,distribution=NULL,...){
     } # end extract
 
     ## for debugging
-    ##elem <- resultList[[73]]
+    ##elem <- resultList[[344]]
 
     extractClass <- function(i,alist,...){
         elem <- alist[[i]]
@@ -68,10 +72,10 @@ extractDist <- function(resultList,distribution=NULL,...){
     ##out <- ldply(seq_along(resultList),extractClass,alist=resultList,distn=NULL)
 
     ## for debugging
-    ## out <- NULL
-    ## for(i in seq_along(resultList)){
-    ##     out <- rbind(out,extractClass(i,resultList))
-    ## }
+    out <- NULL
+    for(i in seq_along(resultList)){
+        out <- rbind(out,extractClass(i,resultList))
+    }
 
     return(out)
 } #end extractDist
