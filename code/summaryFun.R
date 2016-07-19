@@ -41,21 +41,21 @@ extractDist <- function(resultList,distribution=NULL,...){
         el <- subset(el,aic>0)
 
         if(is.null(distn)){
-            el <- subset(el,code==0)
-            out <- eval(parse(text=paste0('subset(el,code==0&',criteria,'==min(',criteria,'))')))
+            elConverge <- subset(el,code==0)
+            out <- eval(parse(text=paste0('subset(elConverge,code==0&',criteria,'==min(',criteria,'))')))
         }else{
             out <- eval(parse(text=paste0("subset(el,distn=='",distn,"')")))
         }
+
         if(nrow(out)==0){
-            nadf <- as.data.frame(matrix(NA,ncol=ncol(out)))
-            names(nadf) <- names(out)
-            out <- nadf
+            out <- el[1,]
+            out[,c('distn','param1','param2')] <- NA
         }
         return(out)
     } # end extract
 
     ## for debugging
-    ##elem <- resultList[[344]]
+    ##elem <- resultList[[132]]
 
     extractClass <- function(i,alist,...){
         elem <- alist[[i]]
@@ -69,13 +69,13 @@ extractDist <- function(resultList,distribution=NULL,...){
     }# end extractClass
 
     out <- ldply(seq_along(resultList),extractClass,alist=resultList,distn=distn,...)
-    ##out <- ldply(seq_along(resultList),extractClass,alist=resultList,distn=NULL)
+    ##out <- ldply(132,extractClass,alist=resultList,distn=NULL)
 
     ## for debugging
-    out <- NULL
-    for(i in seq_along(resultList)){
-        out <- rbind(out,extractClass(i,resultList))
-    }
+    ## out <- NULL
+    ## for(i in seq_along(resultList)){
+    ##     out <- rbind(out,extractClass(i,resultList))
+    ## }
 
     return(out)
 } #end extractDist
