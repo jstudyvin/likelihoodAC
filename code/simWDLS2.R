@@ -32,7 +32,7 @@ estWD <- function(listEl,...){
                        allDist <- c('gamma','weibull','llog','norm')
                        plotType <- as.character(subDat$plotType[1])
                        piHat <- subDat$piHat[1]
-                       message('The plot type is ',plotType,' and piHat is ',piHat)
+                       message('The plot type is ',plotType,', piHat is ',piHat,' and n is ',nrow(subDat),'.')
                        fatDist <- subDat$distance
                        out <- ldply(allDist,weightedDistribution,fatDist=fatDist,...,type=plotType)
                        out$n <- length(fatDist)
@@ -61,6 +61,14 @@ detectCores(all.tests = TRUE, logical = TRUE)
 
 load(paste0(dataPath,'llogSmall.Rdata'))
 ls()
+
+llogSmallResult <- as.list(rep(NA,1000))
+
+for(i in seq_along(llogListSmall)){
+    el <- llogListSmall[[i]]
+    llogSmallResult[[i]] <- estWD(el,weightFun=weightFun,subdivisions=10000)
+}
+
 
 cl <- makeCluster(7)
 registerDoSNOW(cl)
