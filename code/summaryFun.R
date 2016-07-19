@@ -51,6 +51,9 @@ extractDist <- function(resultList,distribution=NULL,...){
             out <- el[1,]
             out[,c('distn','param1','param2')] <- NA
         }
+
+        out$distn <- as.character(out$distn)
+
         return(out)
     } # end extract
 

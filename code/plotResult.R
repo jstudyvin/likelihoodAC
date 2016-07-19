@@ -14,7 +14,7 @@ outPath <- paste0(userPath,'output/')
 codePath <- paste0(userPath,'code/')
 
 
-acFile <- list.files(paste0(outPath,'areaCorResult/'))
+acFile <- list.files(paste0(outPath,'areaCorResult/'),pattern='*.csv')
 
 bigFile <- acFile[grepl('Big',acFile)]
 midFile <- acFile[grepl('Mid',acFile)]
@@ -150,7 +150,7 @@ plotAC <- function(files,path,trueFile){
         plotName <- 'areaCorSmallN.pdf'
     }
 
-    y.lim <- NULL#c(0,.15)
+    y.lim <- c(0,.2)
  pdf(paste0(path,plotName),width=13)
 ##    windows(width=13)
     par(mfrow=c(2,2))
@@ -173,3 +173,47 @@ plotAC <- function(files,path,trueFile){
 plotAC(files=smallFile,path=paste0(outPath,'areaCorResult/'),trueFile=trueFile)
 plotAC(files=midFile,path=paste0(outPath,'areaCorResult/'),trueFile=trueFile)
 plotAC(files=bigFile,path=paste0(outPath,'areaCorResult/'),trueFile=trueFile)
+
+
+
+
+
+tableDist <- function(files,path){
+
+    names(files) <- gsub('.csv','',files)
+
+    datList <- llply(files,function(x,p){
+                         dat <- read.csv(paste0(p,x))
+                         if(grepl('WL',x)){
+                             dat <- ddply(dat,~rep,function(x){x[1,]})
+                         }
+                         ##out <- with(dat,table(distn))
+                         out <- ddply(dat,~distn,summarize,proportion=length(distn)/nrow(dat))
+                         return(out)
+                     },p=path)
+
+
+    ##head(datList[[1]])
+
+    summaryOut <- ldply(datList,rbind,.id='seedDistn')
+    summaryOut <- summaryOut %>%mutate(distn=ifelse(is.na(distn),'notConverge',as.character(distn)))
+
+    out <- ldply(dlply(summaryOut,~seedDistn,function(x){spread(x,key=distn,value=proportion)}),rbind)
+
+
+    return(out)
+} #end tableDist function
+
+
+
+tabDist <- tableDist(file=c(smallFile,midFile,bigFile),path=paste0(outPath,'areaCorResult/'))
+
+
+write.csv(tabDist,file=paste0(outPath,'tableDistn/tabDistn.csv'),row.names=FALSE,na='0')
+
+
+
+tabDist
+
+within(head(tabDist),rm(winner))
+head(tabDist)[,-c('winner'),drop=TRUE]
