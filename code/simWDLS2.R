@@ -70,7 +70,7 @@ for(i in seq_along(llogListSmall)){
 }
 
 
-cl <- makeCluster(7)
+cl <- makeCluster(4)
 registerDoSNOW(cl)
 Sys.time()
 system.time(
