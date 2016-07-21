@@ -24,9 +24,9 @@ source(paste0(codePath,'summaryFun.R'))
 ## llog
 ########################################
 ## small
-## load(paste0(outPath,'llogSmallWD.Rdata'))
-## llogSmallAC <- getAC(resultList=llogSmallResult,wFun=weightFun)
-## write.csv(llogSmallAC,paste0(outPath,'areaCorResult/llogSmallWD.csv'),row.names=FALSE)
+load(paste0(outPath,'llogSmallWD.Rdata'))
+llogSmallAC <- getAC(resultList=llogSmallResult,wFun=weightFun)
+write.csv(llogSmallAC,paste0(outPath,'areaCorResult/llogSmallWD.csv'),row.names=FALSE)
 
 ## mid
 load(paste0(outPath,'llogMidWD.Rdata'))

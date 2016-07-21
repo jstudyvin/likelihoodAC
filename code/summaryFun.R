@@ -22,7 +22,7 @@ extractDist <- function(resultList,distribution=NULL,...){
     }# end else
 
     ## for debugging
-    ##el <- elem[[2]]
+    ##el <- elem[[4]]
 
     extract <- function(el,distn=NULL,criteria='aicc'){
 
@@ -37,11 +37,12 @@ extractDist <- function(resultList,distribution=NULL,...){
             criteria <- 'aic'
         }
 
-        ## negative aic values imply a bad optimization and should be removed
-        el <- subset(el,aic>0)
+
+
 
         if(is.null(distn)){
-            elConverge <- subset(el,code==0)
+            ## negative aic values imply a bad optimization and should be removed
+            elConverge <- subset(el,code==0&aic>0)
             out <- eval(parse(text=paste0('subset(elConverge,code==0&',criteria,'==min(',criteria,'))')))
         }else{
             out <- eval(parse(text=paste0("subset(el,distn=='",distn,"')")))
@@ -58,7 +59,7 @@ extractDist <- function(resultList,distribution=NULL,...){
     } # end extract
 
     ## for debugging
-    ##elem <- resultList[[132]]
+    ##elem <- resultList[[206]]
 
     extractClass <- function(i,alist,...){
         elem <- alist[[i]]

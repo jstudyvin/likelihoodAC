@@ -7,8 +7,8 @@ rm(list=ls())
 
 library(plyr)
 
-##userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
-userPath <- 'D:/studyvin/likelihoodAC/'
+userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
+##userPath <- 'D:/studyvin/likelihoodAC/'
 dataPath <- paste0(userPath,'data/')
 outPath <- paste0(userPath,'output/')
 codePath <- paste0(userPath,'code/')
@@ -62,11 +62,11 @@ detectCores(all.tests = TRUE, logical = TRUE)
 load(paste0(dataPath,'llogSmall.Rdata'))
 ls()
 
-llogSmallResult <- as.list(rep(NA,1000))
+llogSmallResult2 <- as.list(rep(NA,1000))
 
-for(i in seq_along(llogListSmall)){
+for(i in c(39,941) )#seq_along(llogListSmall)){
     el <- llogListSmall[[i]]
-    llogSmallResult[[i]] <- estWD(el,weightFun=weightFun,subdivisions=10000)
+    llogSmallResult2[[i]] <- estWD(el,weightFun=weightFun,subdivisions=10000)
 }
 
 
