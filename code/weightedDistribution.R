@@ -115,7 +115,11 @@ weightedDistribution <- function(distribution,fatDist,weightFun,...){
     k <- length(startValue)
     n <- length(fatDist)
     (aic <- 2*(k+fit$objective)) ## AIC value
-    (aicc <- aic+2*k*(k+1)/(n-k-1)) ## corrected AIC value
+    if(k+1>=n){ ## accounts for small sample size relative to k, ie not divide by zero
+        aicc <- aic
+    }else{
+        (aicc <- aic+2*k*(k+1)/(n-k-1)) ## corrected AIC value
+    }
     ## I'm not sure this is the best way to compare between distributions
 
 

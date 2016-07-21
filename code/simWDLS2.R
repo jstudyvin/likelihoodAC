@@ -1,14 +1,14 @@
 ##########################################################
 ## Jared Studyvin
-## 9 June 2016
+## 15 July 2016
 ## Test the weighted distribution
 ##########################################################
 rm(list=ls())
 
 library(plyr)
 
-userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
-##userPath <- 'D:/studyvin/likelihoodAC/'
+##userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
+userPath <- 'D:/studyvin/likelihoodAC/'
 dataPath <- paste0(userPath,'data/')
 outPath <- paste0(userPath,'output/')
 codePath <- paste0(userPath,'code/')
@@ -32,7 +32,7 @@ estWD <- function(listEl,...){
                        allDist <- c('gamma','weibull','llog','norm')
                        plotType <- as.character(subDat$plotType[1])
                        piHat <- subDat$piHat[1]
-                       message('The plot type is ',plotType,' and piHat is ',piHat)
+                       message('The plot type is ',plotType,', piHat is ',piHat,' and n is ',nrow(subDat),'.')
                        fatDist <- subDat$distance
                        out <- ldply(allDist,weightedDistribution,fatDist=fatDist,...,type=plotType)
                        out$n <- length(fatDist)
@@ -62,7 +62,15 @@ detectCores(all.tests = TRUE, logical = TRUE)
 load(paste0(dataPath,'llogSmall.Rdata'))
 ls()
 
-cl <- makeCluster(7)
+llogSmallResult <- as.list(rep(NA,1000))
+
+for(i in seq_along(llogListSmall)){
+    el <- llogListSmall[[i]]
+    llogSmallResult[[i]] <- estWD(el,weightFun=weightFun,subdivisions=10000)
+}
+
+
+cl <- makeCluster(4)
 registerDoSNOW(cl)
 Sys.time()
 system.time(
