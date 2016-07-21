@@ -47,7 +47,7 @@ plotN <- function(files,path){
     nDF <- ldply(resultList,rbind,.id='distLike')
     subset(nDF,bad!=0)
     colSums(nSpread <- spread(nDF,key=distLike,value=nhat))
-   ## return(colSums(spread(nDF,key=distLike,value=bad,fill=0)))
+  print(colSums(spread(nDF,key=distLike,value=bad,fill=0)))
 
     if(any(grepl('Big',files))){
         hline <- 5000
@@ -86,6 +86,9 @@ plotN <- function(files,path){
 plotN(files=smallFile,path=paste0(outPath,'areaCorResult/'))
 plotN(files=midFile,path=paste0(outPath,'areaCorResult/'))
 plotN(files=bigFile,path=paste0(outPath,'areaCorResult/'))
+
+write.csv(data.frame(sampleSize=c('small','mid','big'),gamma=c(7,2,0),llog=c(37,0,1),norm=c(20,8,4),weibull=c(43,2,1)),paste0(outPath,'areaCorResult/nonConvergeWD.csv'),row.names=FALSE)
+
 
 
 ##path=paste0(outPath,'areaCorResult/')
@@ -215,5 +218,4 @@ write.csv(tabDist,file=paste0(outPath,'tableDistn/tabDistn.csv'),row.names=FALSE
 
 tabDist
 
-within(head(tabDist),rm(winner))
-head(tabDist)[,-c('winner'),drop=TRUE]
+
