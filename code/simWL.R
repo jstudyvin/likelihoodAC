@@ -68,9 +68,12 @@ load(paste0(dataPath,'gammaSmall.Rdata'))
 
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
 
 
 >>>>>>> master
+>>>>>>> refs/remotes/origin/master
 cl <- makeCluster(4)
 registerDoSNOW(cl)
 Sys.time()

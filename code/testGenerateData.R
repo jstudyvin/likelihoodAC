@@ -6,7 +6,7 @@
 rm(list=ls());graphics.off()
 
 
-userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/weightedDistance/'
+userPath <- '~/GoogleDrive/wind/fatality/areaCorrection/likelihoodAC/'
 codePath <- paste0(userPath,'code/')
 dataPath <- paste0(userPath,'data/')
 
