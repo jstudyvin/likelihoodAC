@@ -30,7 +30,7 @@ gammaTrue <- data.frame(plotType=c('RP','FULL'),A=c(sum(weightFun(1:100,type='RP
 
 write.csv(gammaTrue,paste0(outPath,'areaCorResult/gammaTrue.csv'),row.names=FALSE)
 
-gammaSmallAC <- getMHat(resultList=gammaSmallResult,wFun=weightFun,datList=gammaListSmall,plotType=c('FULL','RP'))
+gammaSmallAC <- getNHat(resultList=gammaSmallResult,wFun=weightFun,datList=gammaListSmall,plotType=c('FULL','RP'))
 
 write.csv(gammaSmallAC,paste0(outPath,'areaCorResult/gammaSmallWL.csv'),row.names=FALSE)
 
@@ -38,7 +38,7 @@ write.csv(gammaSmallAC,paste0(outPath,'areaCorResult/gammaSmallWL.csv'),row.name
 load(paste0(outPath,'WL/gammaMidWL.Rdata'))
 load(paste0(dataPath,'gammaMid.Rdata'))
 
-gammaMidAC <- getMHat(resultList=gammaMidResult,wFun=weightFun,datList=gammaListMid,plotType=c('FULL','RP'))
+gammaMidAC <- getNHat(resultList=gammaMidResult,wFun=weightFun,datList=gammaListMid,plotType=c('FULL','RP'))
 
 write.csv(gammaMidAC,paste0(outPath,'areaCorResult/gammaMidWL.csv'),row.names=FALSE)
 
@@ -46,7 +46,7 @@ write.csv(gammaMidAC,paste0(outPath,'areaCorResult/gammaMidWL.csv'),row.names=FA
 load(paste0(outPath,'WL/gammaBigWL.Rdata'))
 load(paste0(dataPath,'gammaBig.Rdata'))
 
-gammaBigAC <- getMHat(resultList=gammaBigResult,wFun=weightFun,datList=gammaListBig,plotType=c('FULL','RP'))
+gammaBigAC <- getNHat(resultList=gammaBigResult,wFun=weightFun,datList=gammaListBig,plotType=c('FULL','RP'))
 
 write.csv(gammaBigAC,paste0(outPath,'areaCorResult/gammaBigWL.csv'),row.names=FALSE)
 
@@ -60,7 +60,7 @@ normTrue <- data.frame(plotType=c('RP','FULL'),A=c(sum(weightFun(1:100,type='RP'
 
 write.csv(normTrue,paste0(outPath,'areaCorResult/normTrue.csv'),row.names=FALSE)
 
-normSmallAC <- getMHat(resultList=normSmallResult,wFun=weightFun,datList=normListSmall,plotType=c('FULL','RP'))
+normSmallAC <- getNHat(resultList=normSmallResult,wFun=weightFun,datList=normListSmall,plotType=c('FULL','RP'))
 
 write.csv(normSmallAC,paste0(outPath,'areaCorResult/normSmallWL.csv'),row.names=FALSE)
 
@@ -68,7 +68,7 @@ write.csv(normSmallAC,paste0(outPath,'areaCorResult/normSmallWL.csv'),row.names=
 load(paste0(outPath,'WL/normMidWL.Rdata'))
 load(paste0(dataPath,'normMid.Rdata'))
 
-normMidAC <- getMHat(resultList=normMidResult,wFun=weightFun,datList=normListMid,plotType=c('FULL','RP'))
+normMidAC <- getNHat(resultList=normMidResult,wFun=weightFun,datList=normListMid,plotType=c('FULL','RP'))
 
 write.csv(normMidAC,paste0(outPath,'areaCorResult/normMidWL.csv'),row.names=FALSE)
 
@@ -76,7 +76,7 @@ write.csv(normMidAC,paste0(outPath,'areaCorResult/normMidWL.csv'),row.names=FALS
 load(paste0(outPath,'WL/normBigWL.Rdata'))
 load(paste0(dataPath,'normBig.Rdata'))
 
-normBigAC <- getMHat(resultList=normBigResult,wFun=weightFun,datList=normListBig,plotType=c('FULL','RP'))
+normBigAC <- getNHat(resultList=normBigResult,wFun=weightFun,datList=normListBig,plotType=c('FULL','RP'))
 
 write.csv(normBigAC,paste0(outPath,'areaCorResult/normBigWL.csv'),row.names=FALSE)
 
@@ -91,7 +91,7 @@ weibullTrue <- data.frame(plotType=c('RP','FULL'),A=c(sum(weightFun(1:100,type='
 
 write.csv(weibullTrue,paste0(outPath,'areaCorResult/weibullTrue.csv'),row.names=FALSE)
 
-weibullSmallAC <- getMHat(resultList=weibullSmallResult,wFun=weightFun,datList=weibullListSmall,plotType=c('FULL','RP'))
+weibullSmallAC <- getNHat(resultList=weibullSmallResult,wFun=weightFun,datList=weibullListSmall,plotType=c('FULL','RP'))
 
 write.csv(weibullSmallAC,paste0(outPath,'areaCorResult/weibullSmallWL.csv'),row.names=FALSE)
 
@@ -99,7 +99,7 @@ write.csv(weibullSmallAC,paste0(outPath,'areaCorResult/weibullSmallWL.csv'),row.
 load(paste0(outPath,'WL/weibullMidWL.Rdata'))
 load(paste0(dataPath,'weibullMid.Rdata'))
 
-weibullMidAC <- getMHat(resultList=weibullMidResult,wFun=weightFun,datList=weibullListMid,plotType=c('FULL','RP'))
+weibullMidAC <- getNHat(resultList=weibullMidResult,wFun=weightFun,datList=weibullListMid,plotType=c('FULL','RP'))
 
 write.csv(weibullMidAC,paste0(outPath,'areaCorResult/weibullMidWL.csv'),row.names=FALSE)
 
@@ -107,7 +107,7 @@ write.csv(weibullMidAC,paste0(outPath,'areaCorResult/weibullMidWL.csv'),row.name
 load(paste0(outPath,'WL/weibullBigWL.Rdata'))
 load(paste0(dataPath,'weibullBig.Rdata'))
 
-weibullBigAC <- getMHat(resultList=weibullBigResult,wFun=weightFun,datList=weibullListBig,plotType=c('FULL','RP'))
+weibullBigAC <- getNHat(resultList=weibullBigResult,wFun=weightFun,datList=weibullListBig,plotType=c('FULL','RP'))
 
 write.csv(weibullBigAC,paste0(outPath,'areaCorResult/weibullBigWL.csv'),row.names=FALSE)
 
@@ -122,7 +122,7 @@ llogTrue <- data.frame(plotType=c('RP','FULL'),A=c(sum(weightFun(1:100,type='RP'
 
 write.csv(llogTrue,paste0(outPath,'areaCorResult/llogTrue.csv'),row.names=FALSE)
 
-llogSmallAC <- getMHat(resultList=llogSmallResult,wFun=weightFun,datList=llogListSmall,plotType=c('FULL','RP'))
+llogSmallAC <- getNHat(resultList=llogSmallResult,wFun=weightFun,datList=llogListSmall,plotType=c('FULL','RP'))
 
 write.csv(llogSmallAC,paste0(outPath,'areaCorResult/llogSmallWL.csv'),row.names=FALSE)
 
@@ -130,7 +130,7 @@ write.csv(llogSmallAC,paste0(outPath,'areaCorResult/llogSmallWL.csv'),row.names=
 load(paste0(outPath,'WL/llogMidWL.Rdata'))
 load(paste0(dataPath,'llogMid.Rdata'))
 
-llogMidAC <- getMHat(resultList=llogMidResult,wFun=weightFun,datList=llogListMid,plotType=c('FULL','RP'))
+llogMidAC <- getNHat(resultList=llogMidResult,wFun=weightFun,datList=llogListMid,plotType=c('FULL','RP'))
 
 write.csv(llogMidAC,paste0(outPath,'areaCorResult/llogMidWL.csv'),row.names=FALSE)
 
@@ -138,7 +138,7 @@ write.csv(llogMidAC,paste0(outPath,'areaCorResult/llogMidWL.csv'),row.names=FALS
 load(paste0(outPath,'WL/llogBigWL.Rdata'))
 load(paste0(dataPath,'llogBig.Rdata'))
 
-llogBigAC <- getMHat(resultList=llogBigResult,wFun=weightFun,datList=llogListBig,plotType=c('FULL','RP'))
+llogBigAC <- getNHat(resultList=llogBigResult,wFun=weightFun,datList=llogListBig,plotType=c('FULL','RP'))
 
 write.csv(llogBigAC,paste0(outPath,'areaCorResult/llogBigWL.csv'),row.names=FALSE)
 
